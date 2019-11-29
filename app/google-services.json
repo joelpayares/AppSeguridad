@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "110542486126",
+    "firebase_url": "https://proyecto-modulo-seguridad.firebaseio.com",
+    "project_id": "proyecto-modulo-seguridad",
+    "storage_bucket": "proyecto-modulo-seguridad.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:110542486126:android:b53ad61b1d2222035e047f",
+        "android_client_info": {
+          "package_name": "com.appseguridad"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "110542486126-7lkqm85lvmu1n52jjlvcd5l8amrjeu2q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.appseguridad",
+            "certificate_hash": "22b3900dc240c49a51828a25bfa6907b6afd73f9"
+          }
+        },
+        {
+          "client_id": "110542486126-rjujuk9ofhqh57o3nakjvs2ct8q7l8pt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCj3-vrD9UCW_iT8YdT_E4wzlqXV0Bm4IU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "110542486126-rjujuk9ofhqh57o3nakjvs2ct8q7l8pt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

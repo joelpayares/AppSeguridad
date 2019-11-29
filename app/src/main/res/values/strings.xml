@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">AppSeguridad</string>
+    <string name="pause">pause</string>
+    <string name="resume">resume</string>
+</resources>
