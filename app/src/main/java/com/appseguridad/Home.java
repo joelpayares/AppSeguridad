@@ -50,16 +50,7 @@ public class Home extends AppCompatActivity {
         latitud = findViewById(R.id.latitudeValueGPS);
         longitud = findViewById(R.id.longitudeTextGPS);
 
-        nomUsu.setText(user.getDisplayName());
-
-        Toast.makeText(this, user.getDisplayName() + " - " + user.getEmail() + " - " + user.getPhoneNumber(), Toast.LENGTH_LONG).show();
-
-        /*runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                cargarDatos();
-            }
-        });*/
+        cargarDatos();
     }
 
     private boolean checkLocation() {
