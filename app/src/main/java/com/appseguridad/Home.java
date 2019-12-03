@@ -22,35 +22,50 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Home extends AppCompatActivity {
 
     private FirebaseUser user;
-    TextView nomUsu;
     TextView coreUsu;
     TextView latitud;
     TextView longitud;
-    ImageView imgUsu;
 
     LocationManager locationManager;
     double longitudeGPS, latitudeGPS;
+    private DatabaseReference myRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
+        myRef = FirebaseDatabase.getInstance().getReference();
+
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
 
-        nomUsu = findViewById(R.id.txtNombres);
         coreUsu = findViewById(R.id.txtCorreo);
-        imgUsu = findViewById(R.id.imgViewUsu);
         latitud = findViewById(R.id.latitudeValueGPS);
-        longitud = findViewById(R.id.longitudeTextGPS);
+        longitud = findViewById(R.id.longitudeValueGPS);
 
-        cargarDatos();
+        almacenarDatos();
+    }
+
+    private void almacenarDatos() {
+        coreUsu.setText(user.getEmail());
+
+        String Correo = user.getEmail();
+        String Uid = user.getUid();
+
+        myRef.child("Users").child(Uid).setValue(new Usuario(Uid, Correo));
     }
 
     private boolean checkLocation() {
@@ -99,7 +114,7 @@ public class Home extends AppCompatActivity {
             }
             locationManager.requestLocationUpdates(
                     LocationManager.GPS_PROVIDER, 2 * 20 * 1000, 10, locationListenerGPS);
-            Toast.makeText(this, "Network provider started running", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "GPS provider started running", Toast.LENGTH_LONG).show();
             button.setText(R.string.pause);
         }
     }
@@ -128,11 +143,4 @@ public class Home extends AppCompatActivity {
         public void onProviderDisabled(String s) {
         }
     };
-
-
-    private void cargarDatos() {
-        imgUsu.setImageURI(user.getPhotoUrl());
-        nomUsu.setText(user.getDisplayName());
-        coreUsu.setText(user.getEmail());
-    }
 }
