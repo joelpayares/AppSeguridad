@@ -64,7 +64,12 @@ public class Home extends AppCompatActivity {
         usdbh = new UsuariosSQLiteHelper(this, "DBUsuarios", null, 1);
         db = usdbh.getReadableDatabase();
 
-        toggleGPSUpdates();
+        /*runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Home.this.methodToRun();
+            }
+        });*/
 
         consultar();
     }
@@ -75,8 +80,9 @@ public class Home extends AppCompatActivity {
             if (c.moveToFirst()) {
 
                 do {
-                    Toast.makeText(this, "Codigo: " + c.getString(0) + ", " + c.getString(1) +
-                            ", " + c.getString(2) + ", " + c.getString(3) + ", " + c.getString(4), Toast.LENGTH_LONG).show();
+                    nomUsu.setText(c.getString(0));
+                    coreUsu.setText(c.getString(2));
+                    celUsu.setText(c.getString(3));
                 } while (c.moveToNext());
             }
 
@@ -110,23 +116,26 @@ public class Home extends AppCompatActivity {
         dialog.show();
     }
 
+    private void methodToRun() {
+
+        while(true){
+            if (!checkLocation())
+                return;
+
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+
+            }
+            locationManager.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER, 2 * 20 * 1000, 10, locationListenerGPS);
+            Toast.makeText(this, "GPS provider started running", Toast.LENGTH_LONG).show();
+        }
+    }
+
     private boolean isLocationEnabled() {
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
                 locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-    }
-
-    public void toggleGPSUpdates() {
-        if (!checkLocation())
-            return;
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-
-        }
-        locationManager.requestLocationUpdates(
-                LocationManager.GPS_PROVIDER, 2 * 20 * 1000, 10, locationListenerGPS);
-        Toast.makeText(this, "GPS provider started running", Toast.LENGTH_LONG).show();
     }
 
     private final LocationListener locationListenerGPS = new LocationListener() {
