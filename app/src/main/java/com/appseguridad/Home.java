@@ -9,6 +9,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -27,45 +29,60 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class Home extends AppCompatActivity {
 
-    private FirebaseUser user;
     TextView coreUsu;
+    TextView nomUsu;
+    TextView celUsu;
     TextView latitud;
     TextView longitud;
 
     LocationManager locationManager;
     double longitudeGPS, latitudeGPS;
-    private DatabaseReference myRef;
+
+    UsuariosSQLiteHelper usdbh;
+    SQLiteDatabase db;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-
-        myRef = FirebaseDatabase.getInstance().getReference();
+        mAuth = FirebaseAuth.getInstance();
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        user = FirebaseAuth.getInstance().getCurrentUser();
-
         coreUsu = findViewById(R.id.txtCorreo);
+        nomUsu = findViewById(R.id.txtNombres);
+        celUsu = findViewById(R.id.txtCelular);
         latitud = findViewById(R.id.latitudeValueGPS);
         longitud = findViewById(R.id.longitudeValueGPS);
 
-        almacenarDatos();
+        /*usdbh = new UsuariosSQLiteHelper(this, "DBUsuarios", null, 1);
+        try (SQLiteDatabase sqLiteDatabase = db = usdbh.getReadableDatabase()) {
+        }*/
+
+        toggleGPSUpdates();
+
+        consultar();
     }
 
-    private void almacenarDatos() {
-        coreUsu.setText(user.getEmail());
+    private void consultar() {
+        String[] valores_recuperar = {"codigo", "nombre", "celular", "correo", "clave"};
+        Cursor c = db.query("Usuarios", valores_recuperar, "codigo=" + mAuth.getCurrentUser().getUid(),
+                null, null, null, null, null);
+        if(c != null) {
+            c.moveToFirst();
+        }
 
-        String Correo = user.getEmail();
-        String Uid = user.getUid();
+        Usuario usuario = new Usuario(c.getString(0), c.getString(1),
+                c.getString(2), c.getString(3), c.getString(4));
 
-        myRef.child("Users").child(Uid).setValue(new Usuario(Uid, Correo));
+        db.close();
+        c.close();
     }
 
     private boolean checkLocation() {
@@ -99,24 +116,18 @@ public class Home extends AppCompatActivity {
                 locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
 
-    public void toggleGPSUpdates(View view) {
+    public void toggleGPSUpdates() {
         if (!checkLocation())
             return;
-        Button button = (Button) view;
-        if (button.getText().equals(getResources().getString(R.string.pause))) {
-            locationManager.removeUpdates(locationListenerGPS);
-            button.setText(R.string.resume);
-        } else {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED) {
 
-            }
-            locationManager.requestLocationUpdates(
-                    LocationManager.GPS_PROVIDER, 2 * 20 * 1000, 10, locationListenerGPS);
-            Toast.makeText(this, "GPS provider started running", Toast.LENGTH_LONG).show();
-            button.setText(R.string.pause);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
         }
+        locationManager.requestLocationUpdates(
+                LocationManager.GPS_PROVIDER, 2 * 20 * 1000, 10, locationListenerGPS);
+        Toast.makeText(this, "GPS provider started running", Toast.LENGTH_LONG).show();
     }
 
     private final LocationListener locationListenerGPS = new LocationListener() {
@@ -126,8 +137,8 @@ public class Home extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    longitud.setText(longitudeGPS + "");
-                    latitud.setText(latitudeGPS + "");
+                    longitud.setText((int) longitudeGPS);
+                    latitud.setText((int) latitudeGPS);
                     Toast.makeText(Home.this, "GPS Provider update", Toast.LENGTH_SHORT).show();
                 }
             });

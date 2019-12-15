@@ -15,6 +15,8 @@
         android:layout_marginEnd="1dp"
         android:layout_marginBottom="1dp"
         android:orientation="vertical"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -53,6 +55,14 @@
             android:hint="Correo"
             android:textSize="24sp" />
 
+        <TextView
+            android:id="@+id/txtCelular"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:hint="Celular"
+            android:textSize="24sp" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -71,7 +81,7 @@
                 android:id="@+id/longitudeTextGPS"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/locationControllerGPS"
+                android:layout_marginTop="10dp"
                 android:text="longitude"
                 android:textSize="20sp" />
 
@@ -79,7 +89,6 @@
                 android:id="@+id/longitudeValueGPS"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/locationControllerGPS"
                 android:layout_toRightOf="@id/longitudeTextGPS"
                 android:text="0.0000"
                 android:textSize="20sp" />
@@ -89,6 +98,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/longitudeTextGPS"
+                android:layout_marginTop="10dp"
                 android:text="latitude"
                 android:textSize="20sp" />
 
@@ -102,15 +112,6 @@
                 android:textSize="20sp" />
 
         </LinearLayout>
-
-        <Button
-            android:id="@+id/locationControllerGPS"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/titleTextGPS"
-            android:layout_centerHorizontal="true"
-            android:onClick="toggleGPSUpdates"
-            android:text="Resume" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
