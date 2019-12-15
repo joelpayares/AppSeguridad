@@ -61,9 +61,8 @@ public class Home extends AppCompatActivity {
         latitud = findViewById(R.id.latitudeValueGPS);
         longitud = findViewById(R.id.longitudeValueGPS);
 
-        /*usdbh = new UsuariosSQLiteHelper(this, "DBUsuarios", null, 1);
-        try (SQLiteDatabase sqLiteDatabase = db = usdbh.getReadableDatabase()) {
-        }*/
+        usdbh = new UsuariosSQLiteHelper(this, "DBUsuarios", null, 1);
+        db = usdbh.getReadableDatabase();
 
         toggleGPSUpdates();
 
@@ -71,15 +70,15 @@ public class Home extends AppCompatActivity {
     }
 
     private void consultar() {
-        String[] valores_recuperar = {"codigo", "nombre", "celular", "correo", "clave"};
-        Cursor c = db.query("Usuarios", valores_recuperar, "codigo=" + mAuth.getCurrentUser().getUid(),
-                null, null, null, null, null);
-        if(c != null) {
-            c.moveToFirst();
-        }
+        Cursor c = db.rawQuery("SELECT * FROM Usuarios WHERE codigo = '" + Objects.requireNonNull(mAuth.getCurrentUser()).getUid() + "' ",null);
 
-        Usuario usuario = new Usuario(c.getString(0), c.getString(1),
-                c.getString(2), c.getString(3), c.getString(4));
+            if (c.moveToFirst()) {
+
+                do {
+                    Toast.makeText(this, "Codigo: " + c.getString(0) + ", " + c.getString(1) +
+                            ", " + c.getString(2) + ", " + c.getString(3) + ", " + c.getString(4), Toast.LENGTH_LONG).show();
+                } while (c.moveToNext());
+            }
 
         db.close();
         c.close();
