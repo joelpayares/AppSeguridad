@@ -113,5 +113,14 @@
 
         </LinearLayout>
 
+        <Button
+            android:id="@+id/locationControllerGPS"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/titleTextGPS"
+            android:layout_centerHorizontal="true"
+            android:onClick="toggleGPSUpdates"
+            android:text="Resume" />
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

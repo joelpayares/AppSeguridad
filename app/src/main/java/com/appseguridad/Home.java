@@ -80,9 +80,9 @@ public class Home extends AppCompatActivity {
             if (c.moveToFirst()) {
 
                 do {
-                    nomUsu.setText(c.getString(0));
-                    coreUsu.setText(c.getString(2));
-                    celUsu.setText(c.getString(3));
+                    nomUsu.setText(c.getString(1));
+                    coreUsu.setText(c.getString(3));
+                    celUsu.setText(c.getString(2));
                 } while (c.moveToNext());
             }
 
@@ -116,12 +116,14 @@ public class Home extends AppCompatActivity {
         dialog.show();
     }
 
-    private void methodToRun() {
-
-        while(true){
-            if (!checkLocation())
-                return;
-
+    public void toggleGPSUpdates(View view) {
+        if (!checkLocation())
+            return;
+        Button button = (Button) view;
+        if (button.getText().equals(getResources().getString(R.string.pause))) {
+            locationManager.removeUpdates(locationListenerGPS);
+            button.setText(R.string.resume);
+        } else {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED) {
@@ -130,6 +132,7 @@ public class Home extends AppCompatActivity {
             locationManager.requestLocationUpdates(
                     LocationManager.GPS_PROVIDER, 2 * 20 * 1000, 10, locationListenerGPS);
             Toast.makeText(this, "GPS provider started running", Toast.LENGTH_LONG).show();
+            button.setText(R.string.pause);
         }
     }
 
